@@ -57,12 +57,16 @@ import java.io.InputStreamReader;
 Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 Number     = [0-9]+
+Anything = .
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment}
 TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
+PercentComment = "%" .*
+DoubleNum = {Number} "." {Number}
+ScienNum = {DoubleNum} "e" "+" | "-" {Number}
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -85,6 +89,8 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
+  {PercentComment}         { return symbolFactory.newSymbol("PERCEN", PERCEN); }
+  {ScienNum}         { return symbolFactory.newSymbol("SCIENNUM", SCIENNUM); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
 }
 

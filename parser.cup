@@ -31,21 +31,27 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, PERCEN;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
+terminal Double    SCIENNUM;        // our scanner provides numbers as integers
 
 /* Non terminals */
 non terminal            expr_list;
+non terminal            percomm;
 non terminal Integer    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence left UMINUS;
+precedence left PERCEN;
 
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
+			| expr_list percomm:pc          {:   :}
             | expr:e SEMI                   {: System.out.println(e); :}
+            | expr:e  percomm:pc      {: System.out.println(e); :}
+            | percomm:pc                   {:  :}
             ;
             
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
@@ -55,5 +61,9 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              %prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | NUMBER:n	                     {: RESULT = n;           :}
+ /*            | SCIENNUM:sn	                     {: RESULT =sn;           :}*/
              ;
+             
+percomm ::= PERCEN			 {:      :}	
+            ;
        
