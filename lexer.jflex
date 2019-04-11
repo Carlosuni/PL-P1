@@ -64,9 +64,9 @@ Comment = {TraditionalComment} | {EndOfLineComment}
 TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
-PercentComment = "%" .*
-DoubleNum = {Number} "." {Number}
-ScienNum = {DoubleNum} "e" "+" | "-" {Number}
+PercentComment = "%" .* 
+/*ScienNum = ({RealNum}) | {Number}) 
+RealNum = {Number} "." {Number}*/
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -90,7 +90,8 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
   {PercentComment}         { return symbolFactory.newSymbol("PERCEN", PERCEN); }
-  {ScienNum}         { return symbolFactory.newSymbol("SCIENNUM", SCIENNUM); }
+  {ScienNum}         { return symbolFactory.newSymbol("SCIENNUM", SCIENNUM, Double.valueOf(yytext())); }
+  {RealNum}         { return symbolFactory.newSymbol("REALNUM", REALNUM, Double.parseDouble(yytext())); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
 }
 

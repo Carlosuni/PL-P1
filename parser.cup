@@ -33,11 +33,12 @@ scan with {: return lexer.next_token(); :};
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, PERCEN;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
-terminal Double    SCIENNUM;        // our scanner provides numbers as integers
+terminal Double    SCIENNUM, REALNUM;        // our scanner provides real numbers as doubles
 
 /* Non terminals */
 non terminal            expr_list;
 non terminal            percomm;
+non terminal Double    real_expr;      // used to store evaluated subexpressions
 non terminal Integer    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
@@ -49,8 +50,11 @@ precedence left PERCEN;
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
 			| expr_list percomm:pc          {:   :}
+			| expr_list real_expr:re          {: System.out.println(re); :}
             | expr:e SEMI                   {: System.out.println(e); :}
             | expr:e  percomm:pc      {: System.out.println(e); :}
+            | real_expr:re SEMI                   {: System.out.println(re); :}
+            | real_expr:re  percomm:pc      {: System.out.println(re); :}
             | percomm:pc                   {:  :}
             ;
             
@@ -61,9 +65,24 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              %prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | NUMBER:n	                     {: RESULT = n;           :}
- /*            | SCIENNUM:sn	                     {: RESULT =sn;           :}*/
              ;
-             
+
+real_expr ::= real_expr:re1 PLUS  real_expr:re2         {: RESULT = re1+re2;        :}
+			 |real_expr:re PLUS  expr:e         {: RESULT = re+e.doubleValue();        :}
+			 |expr:e PLUS  real_expr:re         {: RESULT = e.doubleValue()+re;        :}
+             | real_expr:re1 MINUS real_expr:re2        {: RESULT = re1-re2;        :}
+             | real_expr:re MINUS expr:e        {: RESULT = re-e.doubleValue();        :}
+             | expr:e MINUS real_expr:re        {: RESULT = e.doubleValue()-re;        :}
+             | real_expr:re1 TIMES real_expr:re2        {: RESULT = re1*re2;        :}
+             | real_expr:re TIMES expr:e        {: RESULT = re*e.doubleValue();        :}
+             | expr:e TIMES real_expr:re        {: RESULT = e.doubleValue()*re;        :}
+             | MINUS real_expr:re                 {: RESULT = -re;           :}
+             %prec UMINUS
+             | LPAREN real_expr:re RPAREN	         {: RESULT = re;           :}
+             | REALNUM:n	                     {: RESULT = n;           :}             
+             | SCIENNUM:sn	                     {: RESULT = sn;           :}
+             ;
+            
 percomm ::= PERCEN			 {:      :}	
             ;
        

@@ -9,6 +9,7 @@ package cup.example;
 public interface sym {
   /* terminals */
   public static final int MINUS = 4;
+  public static final int REALNUM = 12;
   public static final int UMINUS = 5;
   public static final int NUMBER = 10;
   public static final int PERCEN = 9;
@@ -32,7 +33,8 @@ public interface sym {
   "RPAREN",
   "PERCEN",
   "NUMBER",
-  "SCIENNUM"
+  "SCIENNUM",
+  "REALNUM"
   };
 }
 
