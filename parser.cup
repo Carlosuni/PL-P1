@@ -46,6 +46,9 @@ non terminal Integer    uminus_expr;      // used to store evaluated subexpressi
 non terminal Double    realnum_expr;      // used to store evaluated subexpressions
 non terminal Double    prod_div_double_expr;      // used to store evaluated subexpressions
 non terminal Double    uminus_double_expr;      // used to store evaluated subexpressions
+non terminal String    inf_expr;      // used to store evaluated subexpressions
+non terminal String    prod_div_inf_expr;      // used to store evaluated subexpressions
+non terminal String    uminus_inf_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
@@ -61,6 +64,8 @@ expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | PERCCOMM                  {:  :}
             | expr_list double_expr:e SEMI         {: System.out.println(e); :}
             | double_expr:e SEMI                   {: System.out.println(e); :}
+            | expr_list inf_expr:e SEMI         {: System.out.println(e); :}
+            | inf_expr:e SEMI                   {: System.out.println(e); :}
             ;
             
 expr      ::= expr:e1 PLUS  prod_div_expr:e2         {: RESULT = e1+e2;        :}
@@ -99,8 +104,8 @@ uminus_expr      ::= UMINUS MINUS number_expr:e              {: RESULT = -e;    
 			 | number_expr:e        {: RESULT = e;        :}
          ;
              
-prod_div_expr      ::= expr:e1 TIMES number_expr:e2        {: RESULT = e1*e2;        :}
-             | expr:e1 DIV number_expr:e2        {: RESULT = e1/e2;        :}
+prod_div_expr      ::= expr:e1 TIMES uminus_expr:e2        {: RESULT = e1*e2;        :}
+             | expr:e1 DIV uminus_expr:e2        {: RESULT = e1/e2;        :}
 			 | uminus_expr:e        {: RESULT = e;        :}
 			 ;
 
@@ -108,13 +113,18 @@ realnum_expr      ::= REALNUM:n	                     {: RESULT = n;           :}
              | SCIENCNUM:n	                     {: RESULT = n;           :}
              ;
 			 
-uminus_double_expr      ::= UMINUS MINUS number_expr:e              {: RESULT = -e;           :}
-			 | number_expr:e        {: RESULT = e;        :}
+uminus_double_expr      ::= UMINUS MINUS realnum_expr:e              {: RESULT = -e;           :}
+			 | realnum_expr:e        {: RESULT = e;        :}
          ;
              
-prod_div_double_expr      ::= double_expr:e1 TIMES realnum_expr:e2        {: RESULT = e1*e2;        :}
-             | double_expr:e1 DIV realnum_expr:e2        {: RESULT = e1/e2;        :}
-             | expr:e1 TIMES realnum_expr:e2        {: RESULT = e1*e2;        :}
-             | expr:e1 DIV realnum_expr:e2        {: RESULT = e1/e2;        :}
-			 | uminus_expr:e        {: RESULT = e;        :}
+prod_div_double_expr      ::= double_expr:e1 TIMES uminus_double_expr:e2        {: RESULT = e1*e2;        :}
+             | double_expr:e1 DIV uminus_double_expr:e2        {: RESULT = e1/e2;        :}
+             | expr:e1 TIMES uminus_double_expr:e2        {: RESULT = e1*e2;        :}
+             | expr:e1 DIV uminus_double_expr:e2        {: RESULT = e1/e2;        :}
+			 | uminus_double_expr:e        {: RESULT = e;        :}
 			 ;			 
+
+ /* Ej3-a */   
+inf_expr      ::= INF PLUS  expr:e1         {: RESULT = "INF";        :}
+             ; 
+             
