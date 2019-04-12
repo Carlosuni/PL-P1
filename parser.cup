@@ -75,7 +75,10 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
              | double_expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}
              | double_expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}             
+             | expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :} 
+             | double_expr:e1 DIV double_expr:e2        {: RESULT = e1/e2;        :}
+             | double_expr:e1 DIV expr:e2        {: RESULT = e1/e2;        :}
+             | expr:e1 DIV double_expr:e2        {: RESULT = e1/e2;        :}              
              | MINUS double_expr:e                 {: RESULT = -e;           :}
              %prec UMINUS
              | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
