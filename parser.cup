@@ -43,15 +43,15 @@ non terminal Double    double_expr;      // used to store evaluated subexpressio
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
-/*precedence left PLUS, MINUS;
+precedence left PLUS, MINUS;
 precedence left TIMES;
-precedence left UMINUS;*/
+precedence left UMINUS;
 
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | expr:e SEMI                   {: System.out.println(e); :}
             /* Ej1-a */
-            expr_list PERCCOMM         {:  :}
+            | expr_list PERCCOMM         {:  :}
             | PERCCOMM                  {:  :}
             | expr_list double_expr:e SEMI         {: System.out.println(e); :}
             | double_expr:e SEMI                   {: System.out.println(e); :}
