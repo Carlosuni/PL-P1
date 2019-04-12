@@ -31,7 +31,7 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV, INF;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
 terminal Double		REALNUM, SCIENCNUM;
