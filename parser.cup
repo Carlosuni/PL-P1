@@ -40,12 +40,15 @@ terminal Double		REALNUM, SCIENCNUM;
 non terminal            expr_list;
 non terminal Integer    expr;      // used to store evaluated subexpressions
 non terminal Double    double_expr;      // used to store evaluated subexpressions
+non terminal Integer    number_expr;      // used to store evaluated subexpressions
+non terminal Integer    prod_div_expr;      // used to store evaluated subexpressions
+non terminal Integer    uminus_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
-precedence left PLUS, MINUS;
+/*precedence left PLUS, MINUS;
 precedence left TIMES, DIV;
-precedence left UMINUS;
+precedence left UMINUS;*/
 
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
@@ -59,12 +62,11 @@ expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | expr:e1 DIV expr:e2        {: RESULT = e1/e2;        :}
+             | prod_div_expr:e       	 {: RESULT = e;        :}
              | MINUS expr:e                 {: RESULT = -e;           :}
-             %prec UMINUS
+             //%prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
-             | NUMBER:n	                     {: RESULT = n;           :}
+             | number_expr:e	                     {: RESULT = e;           :}
              ;
 
 double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
@@ -80,7 +82,7 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | double_expr:e1 DIV expr:e2        {: RESULT = e1/e2;        :}
              | expr:e1 DIV double_expr:e2        {: RESULT = e1/e2;        :}              
              | MINUS double_expr:e                 {: RESULT = -e;           :}
-             %prec UMINUS
+             //%prec UMINUS
              | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
               /* Ej2-a */
              | LOG LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.log(e));        :} 
@@ -95,3 +97,15 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | REALNUM:n	                     {: RESULT = n;           :}
              | SCIENCNUM:n	                     {: RESULT = n;           :}
              ;     
+
+/* Para quitar ambiguedad en la gramática */      
+number_expr      ::= NUMBER:n	                     {: RESULT = n;           :}
+             ;
+uminus_expr      ::= UMINUS MINUS number_expr:e              {: RESULT = -e;           :}
+			 | number_expr:e        {: RESULT = e;        :}
+         ;
+             
+prod_div_expr      ::= expr:e1 TIMES number_expr:e2        {: RESULT = e1*e2;        :}
+			 | uminus_expr:e        {: RESULT = e;        :}
+             | expr:e1 DIV number_expr:e2        {: RESULT = e1/e2;        :}
+			 ;
