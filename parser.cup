@@ -31,7 +31,7 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
 
@@ -67,7 +67,7 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
 
 double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
              | double_expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
-             | double_expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
+             | double_expr:e1 MINUS expr:e2        {: RESULT = e1- (new Double(Integer.valueOf(e2)));        :}
              | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
              | double_expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}
              | double_expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
@@ -77,11 +77,11 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
               /* Ej2-a */
              | LOG LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
-             | LOG LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}       
-             | EXP LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | LOG LPAREN expr:e RPAREN      {: RESULT = new Double(Math.log(e));        :}       
+          /*   | EXP LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
              | EXP LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
              | SIN LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
              | SIN LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
              | COS LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
-             | COS LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
+             | COS LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    */
              ;     
