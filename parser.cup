@@ -42,9 +42,10 @@ non terminal Integer    expr;      // used to store evaluated subexpressions
 non terminal Double    double_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
-precedence left PLUS, MINUS;
+/* Comentadas previo a conversion a gramatica no ambigua*/
+/*precedence left PLUS, MINUS;
 precedence left TIMES;
-precedence left UMINUS;
+precedence left UMINUS;*/
 
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
@@ -63,7 +64,6 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              %prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | NUMBER:n	                     {: RESULT = n;           :}
-              /* Ej2-a */
              ;
 
 double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
