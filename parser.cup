@@ -31,12 +31,14 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
+terminal String		PERCCOMM;
 
 /* Non terminals */
 non terminal            expr_list;
 non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal Double    double_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -46,6 +48,11 @@ precedence left UMINUS;
 /* The grammar rules */
 expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | expr:e SEMI                   {: System.out.println(e); :}
+            /* Ej1-a */
+            expr_list PERCCOMM         {:  :}
+            | PERCCOMM                  {:  :}
+            | expr_list double_expr:e SEMI         {: System.out.println(e); :}
+            | double_expr:e SEMI                   {: System.out.println(e); :}
             ;
             
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
@@ -55,5 +62,26 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              %prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | NUMBER:n	                     {: RESULT = n;           :}
+              /* Ej2-a */
              ;
-       
+
+double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
+             | double_expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
+             | double_expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
+             | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
+             | double_expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}
+             | double_expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
+             | expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}             
+             | MINUS double_expr:e                 {: RESULT = -e;           :}
+             %prec UMINUS
+             | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
+              /* Ej2-a */
+             | LOG LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | LOG LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}       
+             | EXP LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | EXP LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
+             | SIN LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | SIN LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
+             | COS LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | COS LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
+             ;     
