@@ -57,14 +57,13 @@ import java.io.InputStreamReader;
 Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 Number     = [0-9]+
-Anything = .
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment}
 TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
-PercentComment = "%" .* 
+PercentComment = "%" .* {Newline}
 /*ScienNum = ({RealNum}) | {Number}) 
 RealNum = {Number} "." {Number}*/
 
@@ -83,16 +82,23 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
   {Whitespace} {                              }
   ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
+  ","          { return symbolFactory.newSymbol("COMMA", COMMA); }
   "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
   "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
   "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
+  "/"          { return symbolFactory.newSymbol("DIV", DIV); }
   "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
   {PercentComment}         { return symbolFactory.newSymbol("PERCEN", PERCEN); }
-  {ScienNum}         { return symbolFactory.newSymbol("SCIENNUM", SCIENNUM, Double.valueOf(yytext())); }
-  {RealNum}         { return symbolFactory.newSymbol("REALNUM", REALNUM, Double.parseDouble(yytext())); }
+  /*{ScienNum}         { return symbolFactory.newSymbol("SCIENNUM", SCIENNUM, Double.valueOf(yytext())); }
+  {RealNum}         { return symbolFactory.newSymbol("REALNUM", REALNUM, Double.parseDouble(yytext())); }*/
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
+  "exp"        { return symbolFactory.newSymbol("EXP", EXP); }
+  "log"        { return symbolFactory.newSymbol("LOG", LOG); }
+  "sin"        { return symbolFactory.newSymbol("SIN", SIN); }
+  "cos"        { return symbolFactory.newSymbol("COS", COS); }
+  "INF" 		{ return symbolFactory.newSymbol("INF", INF);}
 }
 
 

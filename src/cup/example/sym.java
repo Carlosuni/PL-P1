@@ -10,6 +10,13 @@ public interface sym {
   /* terminals */
   public static final int MINUS = 4;
   public static final int REALNUM = 12;
+  public static final int EXP = 13;
+  public static final int LOG = 14;
+  public static final int SIN = 15;
+  public static final int COS = 16;
+  public static final int COMMA = 17;
+  public static final int INF = 18;
+  public static final int DIV = 19;
   public static final int UMINUS = 5;
   public static final int NUMBER = 10;
   public static final int PERCEN = 9;
@@ -34,7 +41,13 @@ public interface sym {
   "PERCEN",
   "NUMBER",
   "SCIENNUM",
-  "REALNUM"
+  "REALNUM",
+  "EXP",
+  "LOG",
+  "SIN",
+  "COS",
+  "INF",
+  "DIV"
   };
 }
 

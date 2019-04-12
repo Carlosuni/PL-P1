@@ -1,3 +1,11 @@
 % 2+3;
 27+15;  %Comentario en medio
 %2.3;
+%log(3);
+%exp(2,3);
+%sin(90);
+%cos(0);
+%2/INF;
+4+20;
+% PRUEBAS
+
