@@ -14,15 +14,16 @@ public interface sym {
   public static final int RPAREN = 8;
   public static final int COS = 12;
   public static final int SEMI = 2;
+  public static final int REALNUM = 17;
   public static final int LPAREN = 7;
-  public static final int REALNUM = 16;
   public static final int LOG = 9;
   public static final int EXP = 10;
-  public static final int SCIENCNUM = 17;
-  public static final int PERCCOMM = 15;
+  public static final int SCIENCNUM = 18;
+  public static final int PERCCOMM = 16;
   public static final int COMMA = 13;
   public static final int EOF = 0;
-  public static final int NUMBER = 14;
+  public static final int NUMBER = 15;
+  public static final int DIV = 14;
   public static final int MINUS = 4;
   public static final int error = 1;
   public static final int UMINUS = 5;
@@ -41,6 +42,7 @@ public interface sym {
   "SIN",
   "COS",
   "COMMA",
+  "DIV",
   "NUMBER",
   "PERCCOMM",
   "REALNUM",

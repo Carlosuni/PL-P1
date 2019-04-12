@@ -103,6 +103,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   ","          { return symbolFactory.newSymbol("COMMA", COMMA); }
   "sin"		{ return symbolFactory.newSymbol("SIN", SIN); }
   "cos"		{ return symbolFactory.newSymbol("COS", COS); }
+  "/"          { return symbolFactory.newSymbol("DIV", DIV); }
 }
 
 
