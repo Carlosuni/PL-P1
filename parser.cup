@@ -35,6 +35,7 @@ terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, 
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
 terminal Double		REALNUM, SCIENCNUM;
+terminal String     INF;
 
 /* Non terminals */
 non terminal            expr_list;
