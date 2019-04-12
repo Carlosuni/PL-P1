@@ -63,8 +63,8 @@ expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | double_expr:e SEMI                   {: System.out.println(e); :}
             ;
             
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
+expr      ::= expr:e1 PLUS  prod_div_expr:e2         {: RESULT = e1+e2;        :}
+             | expr:e1 MINUS prod_div_expr:e2        {: RESULT = e1-e2;        :}
              | prod_div_expr:e       	 {: RESULT = e;        :}
              | MINUS expr:e                 {: RESULT = -e;           :}
              //%prec UMINUS
@@ -73,12 +73,10 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              ;
              
 /* Ej1-b */   
-double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
-			 | double_expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
-			 | expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
-             | double_expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
-             | double_expr:e1 MINUS expr:e2        {: RESULT = e1- e2;        :}
-             | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
+double_expr      ::= double_expr:e1 PLUS  prod_div_expr:e2         {: RESULT = e1+e2;        :}
+			 | expr:e1 PLUS  prod_div_expr:e2         {: RESULT = e1+e2;        :}
+             | double_expr:e1 MINUS prod_div_expr:e2        {: RESULT = e1-e2;        :}
+             | expr:e1 MINUS prod_div_expr:e2        {: RESULT = e1- e2;        :}
              | prod_div_double_expr:e       	 {: RESULT = e;        :}            
              | MINUS double_expr:e                 {: RESULT = -e;           :}
              //%prec UMINUS
