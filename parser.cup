@@ -47,8 +47,6 @@ non terminal Double    realnum_expr;      // used to store evaluated subexpressi
 non terminal Double    prod_div_double_expr;      // used to store evaluated subexpressions
 non terminal Double    uminus_double_expr;      // used to store evaluated subexpressions
 non terminal String    inf_expr;      // used to store evaluated subexpressions
-non terminal String    prod_div_inf_expr;      // used to store evaluated subexpressions
-non terminal String    uminus_inf_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
@@ -102,7 +100,7 @@ number_expr      ::= NUMBER:n	                     {: RESULT = n;           :}
              ;
 uminus_expr      ::= UMINUS MINUS number_expr:e              {: RESULT = -e;           :}
 			 | number_expr:e        {: RESULT = e;        :}
-         ;
+             ;
              
 prod_div_expr      ::= expr:e1 TIMES uminus_expr:e2        {: RESULT = e1*e2;        :}
              | expr:e1 DIV uminus_expr:e2        {: RESULT = e1/e2;        :}
@@ -125,6 +123,42 @@ prod_div_double_expr      ::= double_expr:e1 TIMES uminus_double_expr:e2        
 			 ;			 
 
  /* Ej3-a */   
-inf_expr      ::= INF PLUS  expr:e1         {: RESULT = "INF";        :}
-             ; 
+inf_expr      ::= INF PLUS expr:e1       {: RESULT = "INF";        :}
+             | INF PLUS double_expr:e1       {: RESULT = "INF";        :}
+             | expr:e1 PLUS INF       {: RESULT = "INF";        :}
+             | double_expr:e1 PLUS INF       {: RESULT = "INF";        :}
+             
+             | MINUS INF PLUS expr:e1       {: RESULT = "-INF";        :}
+             | MINUS INF PLUS double_expr:e1       {: RESULT = "-INF";        :}
+             | MINUS INF       {: RESULT = "-INF";        :}
+                  
+             | INF MINUS expr:e1       {: RESULT = "INF";        :}
+             | INF MINUS double_expr:e1       {: RESULT = "INF";        :}
+             | expr:e1 MINUS INF       {: RESULT = "-INF";        :}
+             | double_expr:e1 MINUS INF       {: RESULT = "-INF";        :}
+             
+             | INF TIMES expr:e1       {: RESULT = "INF";        :}
+             | INF TIMES double_expr:e1       {: RESULT = "INF";        :}
+             | expr:e1 TIMES INF       {: RESULT = "INF";        :}
+             | double_expr:e1 TIMES INF       {: RESULT = "INF";        :}
+             | INF TIMES MINUS INF       {: RESULT = "INF";        :}
+             
+             | INF DIV expr:e1       {: RESULT = "INF";        :}
+             | INF DIV double_expr:e1       {: RESULT = "INF";        :}
+             | expr:e1 DIV INF       {: RESULT = "0";        :}
+             | double_expr:e1 DIV INF       {: RESULT = "0";        :}
+             | INF DIV MINUS expr:e1       {: RESULT = "-INF";        :}
+             | INF DIV MINUS double_expr:e1       {: RESULT = "-INF";        :}
+             
+             | expr:e1 DIV 0     {: RESULT = "INF";        :}
+             | double_expr:e1 DIV 0      {: RESULT = "INF";        :}
+             
+             | INF MINUS INF     {: RESULT = "UNK";        :}
+             | MINUS INF PLUS INF      {: RESULT = "UNK";        :}
+             | 0 DIV 0     {: RESULT = "UNK";        :}
+             | 0 TIMES INF     {: RESULT = "UNK";        :}
+             | INF DIV INF     {: RESULT = "UNK";        :}                
+			 ;			 
+      
+      
              

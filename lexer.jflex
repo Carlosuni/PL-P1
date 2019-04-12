@@ -69,7 +69,6 @@ PercenComment = "%".*{Newline}
 RealNum = {Number} "." {Number}
 SciencNum = ({Number} | {RealNum}) ("e"| "e-" | "e+") {Number}
 
-
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 
