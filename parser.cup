@@ -31,7 +31,7 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
 terminal Double		REALNUM, SCIENCNUM;
@@ -39,7 +39,12 @@ terminal Double		REALNUM, SCIENCNUM;
 /* Non terminals */
 non terminal            expr_list;
 non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal Integer    minus_expr;      // used to store evaluated subexpressions
+non terminal Integer    prod_div_expr;      // used to store evaluated subexpressions
 non terminal Double    double_expr;      // used to store evaluated subexpressions
+non terminal Double    minus_double_expr;      // used to store evaluated subexpressions
+non terminal Double    prod_div_double_expr;      // used to store evaluated subexpressions
+
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
@@ -59,9 +64,8 @@ expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              | expr:e1 MINUS expr:e2        {: RESULT = e1-e2;        :}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | MINUS expr:e                 {: RESULT = -e;           :}
-             %prec UMINUS
+             | prod_div_expr:e                {: RESULT = e;           :}
+             //%prec UMINUS
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | NUMBER:n	                     {: RESULT = n;           :}
              ;
@@ -71,12 +75,9 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
 			 | expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
              | double_expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
              | double_expr:e1 MINUS expr:e2        {: RESULT = e1- e2;        :}
-             | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}
-             | double_expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}
-             | double_expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
-             | expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}             
-             | MINUS double_expr:e                 {: RESULT = -e;           :}
-             %prec UMINUS
+             | expr:e1 MINUS double_expr:e2        {: RESULT = e1-e2;        :}     
+             | prod_div_double_expr:e                					   {: RESULT = e;           :}
+             //%prec UMINUS
              | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
               /* Ej2-a */
              | LOG LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.log(e));        :} 
@@ -90,5 +91,25 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
               /* Ej1-b */   
              | REALNUM:n	                     {: RESULT = n;           :}
              | SCIENCNUM:n	                     {: RESULT = n;           :}
+             ;    
+      
+/* Ej2-b*/            
+prod_div_expr      ::= expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
+             | expr:e1 DIV expr:e2                {: RESULT = e1/e2;           :}
+             | minus_expr:e                {: RESULT = e;           :}
              ;     
-             
+                                 
+minus_expr      ::= MINUS expr:e                 {: RESULT = -e;           :}
+             ;             
+ 
+prod_div_double_expr      ::= double_expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}
+             | double_expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
+             | expr:e1 TIMES double_expr:e2        {: RESULT = e1*e2;        :}    
+             | double_expr:e1 DIV double_expr:e2        {: RESULT = e1/e2;        :}
+             | double_expr:e1 DIV expr:e2        {: RESULT = e1/e2;        :}
+             | expr:e1 DIV double_expr:e2        {: RESULT = e1/e2;        :} 
+             | minus_double_expr:e                {: RESULT = e;           :}
+             ;     
+                                 
+minus_double_expr      ::= MINUS double_expr:e                 {: RESULT = -e;           :}
+             ;       

@@ -26,6 +26,7 @@ public interface sym {
   public static final int MINUS = 4;
   public static final int error = 1;
   public static final int UMINUS = 5;
+  public static final int DIV = 18;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -44,7 +45,8 @@ public interface sym {
   "NUMBER",
   "PERCCOMM",
   "REALNUM",
-  "SCIENCNUM"
+  "SCIENCNUM",
+  "DIV"
   };
 }
 
