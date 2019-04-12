@@ -104,7 +104,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "sin"		{ return symbolFactory.newSymbol("SIN", SIN); }
   "cos"		{ return symbolFactory.newSymbol("COS", COS); }
   /* Ej3-a */
-  "/"          { return symbolFactory.newSymbol("DIV", DIV); } 
+  "/"          { return symbolFactory.newSymbol("DIVIDE", DIVIDE); } 
   "INF"          { return symbolFactory.newSymbol("INF", INF); } 
 }
 
