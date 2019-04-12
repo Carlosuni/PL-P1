@@ -31,7 +31,7 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV, INF;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
 terminal Double		REALNUM, SCIENCNUM;
@@ -71,7 +71,8 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
              | number_expr:e	                     {: RESULT = e;           :}
              ;
-
+             
+/* Ej1-b */   
 double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
 			 | double_expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
 			 | expr:e1 PLUS  double_expr:e2         {: RESULT = e1+e2;        :}
@@ -91,8 +92,6 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | SIN LPAREN expr:e RPAREN      {: RESULT = new Double(Math.sin(e));        :}    
              | COS LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.cos(e));        :} 
              | COS LPAREN expr:e RPAREN      {: RESULT = new Double(Math.cos(e));        :} 
-              /* Ej1-b */   
-             
              ;     
 
 /* Para quitar ambiguedad en la gramática */      
