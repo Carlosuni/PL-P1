@@ -31,9 +31,10 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
 terminal String		PERCCOMM;
+terminal Double		REALNUM, SCIENCNUM;
 
 /* Non terminals */
 non terminal            expr_list;
@@ -76,12 +77,14 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              %prec UMINUS
              | LPAREN double_expr:e RPAREN	         {: RESULT = e;           :}
               /* Ej2-a */
-             | LOG LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
+             | LOG LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.log(e));        :} 
              | LOG LPAREN expr:e RPAREN      {: RESULT = new Double(Math.log(e));        :}       
-          /*   | EXP LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
-             | EXP LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
-             | SIN LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
-             | SIN LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    
-             | COS LPAREN double_expr:e RPAREN      {: RESULT = Math.log(e);        :} 
-             | COS LPAREN expr:e RPAREN      {: RESULT = Math.log(e);        :}    */
+             | EXP LPAREN double_expr:e1 COMMA expr:e2 RPAREN      {: RESULT = new Double(Math.pow(e1,e2));        :} 
+             | EXP LPAREN expr:e1 COMMA expr:e2 RPAREN      {: RESULT = new Double(Math.pow(e1,e2));        :}    
+             | SIN LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.sin(e));        :} 
+             | SIN LPAREN expr:e RPAREN      {: RESULT = new Double(Math.sin(e));        :}    
+             | COS LPAREN double_expr:e RPAREN      {: RESULT = new Double(Math.cos(e));        :} 
+             | COS LPAREN expr:e RPAREN      {: RESULT = new Double(Math.cos(e));        :}    
+             | REALNUM:n	                     {: RESULT = n;           :}
+             | SCIENCNUM:n	                     {: RESULT = n;           :}
              ;     

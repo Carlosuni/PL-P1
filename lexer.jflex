@@ -65,6 +65,10 @@ EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 /* Ej1-a */
 PercenComment = "%".*{Newline}
+/* Ej1-b */
+RealNum = {Number} "." {Number}
+SciencNum = {Number} "e" {Number}
+
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -87,11 +91,14 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
+  ","          { return symbolFactory.newSymbol("COMMA", COMMA); }
   "log"		{ return symbolFactory.newSymbol("LOG", LOG); }
   "exp"		{ return symbolFactory.newSymbol("EXP", EXP); }
   "sin"		{ return symbolFactory.newSymbol("SIN", SIN); }
   "cos"		{ return symbolFactory.newSymbol("COS", COS); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
+  {RealNum}     { return symbolFactory.newSymbol("REALNUM", REALNUM, Double.parseDouble(yytext())); }
+  {SciencNum}     { return symbolFactory.newSymbol("SCIENCNUM", SCIENCNUM, Double.parseDouble(yytext())); }
   {PercenComment}     { return symbolFactory.newSymbol("PERCCOMM", PERCCOMM); }
 }
 
