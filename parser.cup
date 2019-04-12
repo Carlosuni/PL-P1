@@ -31,20 +31,22 @@ init with {:
 scan with {: return lexer.next_token(); :};
 
 /* Terminals (tokens returned by the scanner). */
-terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV, INF;
+terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN, LOG, EXP, SIN, COS, COMMA, DIV;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
-terminal String		PERCCOMM;
+terminal String		PERCCOMM, INF;
 terminal Double		REALNUM, SCIENCNUM;
 
 /* Non terminals */
 non terminal            expr_list;
 non terminal Integer    expr;      // used to store evaluated subexpressions
 non terminal Double    double_expr;      // used to store evaluated subexpressions
+non terminal String    inf_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 /* Comentadas previo a conversion a gramatica no ambigua*/
 precedence left PLUS, MINUS;
 precedence left TIMES, DIV;
+precedence left INF;
 precedence left UMINUS;
 
 /* The grammar rules */
@@ -55,6 +57,8 @@ expr_list ::= expr_list expr:e SEMI         {: System.out.println(e); :}
             | PERCCOMM                  {:  :}
             | expr_list double_expr:e SEMI         {: System.out.println(e); :}
             | double_expr:e SEMI                   {: System.out.println(e); :}
+            | expr_list inf_expr:e SEMI         {: System.out.println(e); :}
+            | inf_expr:e SEMI                   {: System.out.println(e); :}
             ;
             
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
@@ -95,3 +99,30 @@ double_expr      ::= double_expr:e1 PLUS  double_expr:e2         {: RESULT = e1+
              | REALNUM:n	                     {: RESULT = n;           :}
              | SCIENCNUM:n	                     {: RESULT = n;           :}
              ;     
+             
+inf_expr      ::= INF PLUS  expr:e         {: RESULT = "INF";        :}
+			 | INF PLUS  double_expr:e         {: RESULT = "INF";        :}
+			 | expr:e PLUS  INF         {: RESULT = "INF";        :}
+			 | double_expr:e PLUS  INF         {: RESULT = "INF";        :}
+			 
+			 | INF MINUS  expr:e         {: RESULT = "INF";        :}
+			 | INF MINUS  double_expr:e         {: RESULT = "INF";        :}
+			 | expr:e MINUS  INF         {: RESULT = "INF";        :}
+			 | double_expr:e MINUS  INF         {: RESULT = "INF";        :}
+			 
+			 | INF TIMES  expr:e         {: RESULT = "INF";        :}
+			 | INF TIMES  double_expr:e         {: RESULT = "INF";        :}
+			 | expr:e TIMES  INF         {: RESULT = "INF";        :}
+			 | double_expr:e TIMES  INF         {: RESULT = "INF";        :}
+			 
+			 | INF DIV  expr:e         {: RESULT = "INF";        :}
+			 | INF DIV  double_expr:e         {: RESULT = "INF";        :}
+			 | expr:e DIV  INF         {: RESULT = "0";        :}
+			 | double_expr:e DIV  INF         {: RESULT = "0";        :}
+			 | INF DIV  MINUS expr:e         {: RESULT = "INF";        :}
+			 | INF DIV  MINUS double_expr:e         {: RESULT = "-INF";        :}
+			 
+			 //| expr:e DIV  expr:0         {: RESULT = "INF";        :}
+			 //| double_expr:e:e DIV  expr:0         {: RESULT = "INF";        :}
+			 | INF TIMES  MINUS INF         {: RESULT = "-INF";        :}
+             ;   
