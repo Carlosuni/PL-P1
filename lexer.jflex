@@ -94,8 +94,6 @@ Fecha = [0-3]? [0-9] "/" [0-1]? [0-9] "/" [0-9]{4}
 Exponential = "exp("
 Logarithm = "log("
 
-// TODO: add division operation handling (throw exception or return error if divided by 0)
-
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 
