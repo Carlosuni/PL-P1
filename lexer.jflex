@@ -55,8 +55,9 @@ import java.io.InputStreamReader;
 %}
 
 Newline    = \r | \n | \r\n
-Whitespace = [ \t\f] | {Newline}
+Whitespace = [ \t\f]
 Number     = [0-9]+
+WhitespaceNewline = [ \t\f] | {Newline}
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {ModernComment}
@@ -67,8 +68,13 @@ CommentContent = ( [^*] | \*+[^*/] )*
 ModernComment = "<!--"(.|{Newline})*"-->"		// Option 2 (Last year)
 
 RealNumber = {Number}"."{Number}
-ScienceNumber = ({Number} | {RealNumber}) ("e"|"E")("-"|"+") {Number}
+ScienceNumber = ({Number} | {RealNumber}) ("e"|"E")("-"|"+"|"") {Number}
 DoubleNumber = {RealNumber}|{ScienceNumber}
+HexAlfaNumber = ([0-9A-F])+
+HexNumber = "0x"{HexAlfaNumber}
+
+NombrePalabra = [A-ZÑÁÉÍÓÚ][a-zñáéíóú]*
+NombreApellidos = ({NombrePalabra}{Whitespace}*)+
 
 
 
@@ -85,7 +91,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 <YYINITIAL> {
 
-  {Whitespace} {                              }
+  {WhitespaceNewline} {                              }
   ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
   "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
   "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
@@ -95,7 +101,10 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
   {Comment}			{ return symbolFactory.newSymbol("COMMENT", COMMENT); }
-  {DoubleNumber}	{ return symbolFactory.newSymbol("COMMENT", COMMENT, Double.parseDouble(yytext()); }
+  {DoubleNumber}	{ return symbolFactory.newSymbol("DOUBLENUMBER", DOUBLENUMBER, Double.parseDouble(yytext())); }
+  {HexNumber}     { return symbolFactory.newSymbol("HEXNUMBER", HEXNUMBER, Integer.parseInt(yytext().substring(2,yytext().length()), 16)); }
+  {NombreApellidos}	{ return symbolFactory.newSymbol("NOMBREAPELLIDOS", NOMBREAPELLIDOS, yytext()); }
+    
 }
 
 
