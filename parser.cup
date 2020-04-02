@@ -33,10 +33,15 @@ scan with {: return lexer.next_token(); :};
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
-terminal String    COMMENT;
-terminal Double    DOUBLENUMBER;
+
+terminal String    	COMMENT;
+terminal Double    	DOUBLENUMBER;
 terminal Integer    HEXNUMBER;
-terminal String    NOMBREAPELLIDOS;
+terminal String    	NOMBREAPELLIDOS;
+terminal String		EMAIL;
+terminal String		DNI;
+terminal String		MATRICULA;
+terminal String 	FECHA;
 
 
 /* Non terminals */
@@ -58,6 +63,10 @@ statement_list ::= statement_list statement {:  :}
 statement ::= expr:e SEMI        			{: System.out.println(e); :}
             | COMMENT	                    {:  :}
             | NOMBREAPELLIDOS:e				{: System.out.println("Nombre y apellidos: " + e); :}
+            | EMAIL:e						{: System.out.println("e-mail: " + e); :}
+            | DNI:e							{: System.out.println("DNI: " + e); :}
+            | MATRICULA:e					{: System.out.println("Matrícula: " + e); :}
+            | FECHA:e						{: System.out.println("Fecha: " + e); :}
 			;     
 			       
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}

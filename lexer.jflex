@@ -5,6 +5,9 @@ import java_cup.runtime.Symbol;
 import java.lang.*;
 import java.io.InputStreamReader;
 
+/* Custom Imports */
+import java.text.SimpleDateFormat;  
+
 %%
 
 %class Lexer
@@ -55,9 +58,8 @@ import java.io.InputStreamReader;
 %}
 
 Newline    = \r | \n | \r\n
-Whitespace = [ \t\f]
 Number     = [0-9]+
-WhitespaceNewline = [ \t\f] | {Newline}
+
 
 /* comments */
 Comment = {TraditionalComment} | {EndOfLineComment} | {ModernComment}
@@ -65,18 +67,32 @@ TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
-ModernComment = "<!--"(.|{Newline})*"-->"		// Option 2 (Last year)
+/* Parte 1. Ejercicio A */
+ModernComment = "<!--" ( . | {Newline} )* "-->"		// Option 2 (Last year)
 
-RealNumber = {Number}"."{Number}
-ScienceNumber = ({Number} | {RealNumber}) ("e"|"E")("-"|"+"|"") {Number}
-DoubleNumber = {RealNumber}|{ScienceNumber}
-HexAlfaNumber = ([0-9A-F])+
-HexNumber = "0x"{HexAlfaNumber}
+/* Parte 1. Ejercicio B */
+RealNumber = {Number} "." {Number}
+ScienceNumber = ( {Number} | {RealNumber} ) ( "e" | "E" )( "-" | "+" | "" ) {Number}
+DoubleNumber = {RealNumber} | {ScienceNumber}
+HexAlfaNumber = ( [0-9A-F] )+
+HexNumber = "0x" {HexAlfaNumber} | "0X" {HexAlfaNumber}
 
-NombrePalabra = [A-ZÑÁÉÍÓÚ][a-zñáéíóú]*
-NombreApellidos = ({NombrePalabra}{Whitespace}*)+
+/* Parte 1. Ejercicio C */
+Whitespace = [ \t\f]
+WhitespaceNewline = [ \t\f] | {Newline}
+NombrePalabra = [A-ZÑÁÉÍÓÚ] [a-zñáéíóú]*
+NombreApellidos = ( {NombrePalabra} {Whitespace}* )+
+Email = .+ "@" .+ "." .+
+Dni = [0-9]{7,8} "-" [A-Z] | [0-9]{7,8} [A-Z]
+MatriculaRetro = [A-Z]{1,2} "-" [0-9]{5} | [A-Z]{1,2} [0-9]{5}
+MatriculaAntigua = [A-Z]{1,2} "-" [0-9]{4} "-" [A-Z]{1,2} | [A-Z]{1,2} [0-9]{4} [A-Z]{1,2}
+MatriculaNueva = [0-9]{4} "-" [A-Z]{1,3} | [0-9]{4} [A-Z]{1,3}
+Matricula = {MatriculaRetro} | {MatriculaAntigua} | {MatriculaNueva}
+Fecha = [0-3]? [0-9] "/" [0-1]? [0-9] "/" [0-9]{4}
 
 
+// TODO: add UMINUS handling with - instead of n
+// TODO: add division operation handling (throw exception or return error if divided by 0)
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -92,19 +108,22 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 <YYINITIAL> {
 
   {WhitespaceNewline} {                              }
-  ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
-  "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
-  "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
-  "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
-  "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
-  "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
-  ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
-  {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
-  {Comment}			{ return symbolFactory.newSymbol("COMMENT", COMMENT); }
+  ";"          		{ return symbolFactory.newSymbol("SEMI", SEMI); }
+  "+"          		{ return symbolFactory.newSymbol("PLUS", PLUS); }
+  "-"          		{ return symbolFactory.newSymbol("MINUS", MINUS); }
+  "*"          		{ return symbolFactory.newSymbol("TIMES", TIMES); }
+  "n"          		{ return symbolFactory.newSymbol("UMINUS", UMINUS); }
+  "("          		{ return symbolFactory.newSymbol("LPAREN", LPAREN); }
+  ")"          		{ return symbolFactory.newSymbol("RPAREN", RPAREN); }
+  {Number}     		{ return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
+  {Comment}			{ return symbolFactory.newSymbol("COMMENT", COMMENT, yytext()); }
   {DoubleNumber}	{ return symbolFactory.newSymbol("DOUBLENUMBER", DOUBLENUMBER, Double.parseDouble(yytext())); }
-  {HexNumber}     { return symbolFactory.newSymbol("HEXNUMBER", HEXNUMBER, Integer.parseInt(yytext().substring(2,yytext().length()), 16)); }
+  {HexNumber} 	    { return symbolFactory.newSymbol("HEXNUMBER", HEXNUMBER, Integer.parseInt(yytext().substring(2,yytext().length()), 16)); }
   {NombreApellidos}	{ return symbolFactory.newSymbol("NOMBREAPELLIDOS", NOMBREAPELLIDOS, yytext()); }
-    
+  {Email}			{ return symbolFactory.newSymbol("EMAIL", EMAIL, yytext()); }
+  {Dni}				{ return symbolFactory.newSymbol("DNI", DNI, yytext()); }
+  {Matricula}		{ return symbolFactory.newSymbol("MATRICULA", MATRICULA, yytext()); }
+  {Fecha}			{ return symbolFactory.newSymbol("FECHA", FECHA, yytext()); }
 }
 
 
