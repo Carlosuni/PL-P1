@@ -53,7 +53,6 @@ terminal String		LOGARITHM;
 /* Non terminals */
 non terminal            statement_list;
 non terminal            statement;
-
 non terminal Double    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
@@ -65,8 +64,8 @@ precedence left EXPONENTIAL;
 
 /* The grammar rules */
 statement_list ::= statement_list statement {:  :}
-            | statement                   	{:  :}
-            ;
+           		 | statement                   	{:  :}
+            	 ;
             
 statement ::= expr:e SEMI        			{: System.out.println(e); 							:}
             | COMMENT	                    {:  												:}
@@ -78,15 +77,15 @@ statement ::= expr:e SEMI        			{: System.out.println(e); 							:}
 			;     
 			       
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
-             | expr:e1 MINUS expr:e2        {: RESULT = e1 - e2;        						:}
-             | expr:e1 TIMES expr:e2        {: RESULT = e1 * e2;        						:}
-             | expr:e1 DIVIDEDBY expr:e2    {: RESULT = e1 / e2;        						:}
-             | MINUS expr:e                 {: RESULT = -e;           							:}
-             | LPAREN expr:e RPAREN	        {: RESULT = e;           							:}
-             | NUMBER:n	                    {: RESULT = Double.valueOf(n);       				:}
-             | DOUBLENUMBER:n	            {: RESULT = n;       								:}
-             | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
-             | EXPONENTIAL expr:e1 RPAREN   {: RESULT = Math.exp(e1);        					:}         
-             | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}         
-             ;
+            | expr:e1 MINUS expr:e2         {: RESULT = e1 - e2;        						:}
+            | expr:e1 TIMES expr:e2         {: RESULT = e1 * e2;        						:}
+            | expr:e1 DIVIDEDBY expr:e2     {: RESULT = e1 / e2;        						:}
+            | MINUS expr:e                  {: RESULT = -e;           							:}
+            | LPAREN expr:e RPAREN	        {: RESULT = e;           							:}
+            | NUMBER:n	                    {: RESULT = Double.valueOf(n);       				:}
+            | DOUBLENUMBER:n	            {: RESULT = n;       								:}
+            | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
+            | EXPONENTIAL expr:e1 RPAREN    {: RESULT = Math.exp(e1);        					:}         
+            | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}         
+            ;
        
