@@ -61,7 +61,7 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              | MINUS expr:e                 {: RESULT = -e;           :}
              %prec UMINUS
              | LPAREN expr:e RPAREN	        {: RESULT = e;            :}
-             | number_expr:n	            {: RESULT = new Double(n); :}
+             | number_expr:n	            {: RESULT = Double.parseDouble(n); :}
              | double_number_expr:n	        {: RESULT = n;            :}
              ;
              
