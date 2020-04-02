@@ -1,4 +1,4 @@
-package cup.example;
+package cup.p1;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.Symbol;
@@ -58,11 +58,25 @@ Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 Number     = [0-9]+
 
+
 /* comments */
-Comment = {TraditionalComment} | {EndOfLineComment}
 TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
+
+/* Custom Tokens */
+/* Exercise A */
+Comment = {TraditionalComment} | {EndOfLineComment} | {ModernComment}
+//ModernComment = "<!--" {CommentContent} \*+ "-->"		// Option 1
+ModernComment = "<!--"(.|{Newline})*"-->"		// Option 2 (Last year)
+
+/* Exercise B */
+Real = {Number}.{Number}
+ScienceNumber = {Real}[eE][\+\-]?{Number}
+FullNumber = {Number}|{Real}|{RealCientifico}
+
+
+
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
@@ -86,6 +100,8 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
   {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
+  {Comment}		{ return symbolFactory.newSymbol("COMMENT", COMMENT); }
+  
 }
 
 
