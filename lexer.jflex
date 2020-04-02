@@ -90,8 +90,10 @@ MatriculaNueva = [0-9]{4} "-" [A-Z]{1,3} | [0-9]{4} [A-Z]{1,3}
 Matricula = {MatriculaRetro} | {MatriculaAntigua} | {MatriculaNueva}
 Fecha = [0-3]? [0-9] "/" [0-1]? [0-9] "/" [0-9]{4}
 
+/* Parte 2. Ejercicio A */
+Exponential = "exp("
+Logarithm = "log("
 
-// TODO: add UMINUS handling with - instead of n
 // TODO: add division operation handling (throw exception or return error if divided by 0)
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
@@ -124,6 +126,8 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   {Dni}				{ return symbolFactory.newSymbol("DNI", DNI, yytext()); }
   {Matricula}		{ return symbolFactory.newSymbol("MATRICULA", MATRICULA, yytext()); }
   {Fecha}			{ return symbolFactory.newSymbol("FECHA", FECHA, yytext()); }
+  {Exponential}		{ return symbolFactory.newSymbol("EXPONENTIAL", EXPONENTIAL, yytext()); }
+  {Logarithm}		{ return symbolFactory.newSymbol("LOGARITHM", LOGARITHM, yytext()); }
 }
 
 

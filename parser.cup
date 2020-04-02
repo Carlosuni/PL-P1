@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 
+/* Custom Imports */
+import java.lang.Math; 
+
 
 parser code {:
   protected Lexer lexer;
@@ -43,6 +46,8 @@ terminal String		EMAIL;
 terminal String		DNI;
 terminal String		MATRICULA;
 terminal String 	FECHA;
+terminal String		EXPONENTIAL;
+terminal String		LOGARITHM;
 
 
 /* Non terminals */
@@ -55,6 +60,8 @@ non terminal Double    expr;      // used to store evaluated subexpressions
 precedence left PLUS, MINUS;
 precedence left DIVIDEDBY;
 precedence left TIMES;
+precedence left LOGARITHM;
+precedence left EXPONENTIAL;
 
 /* The grammar rules */
 statement_list ::= statement_list statement {:  :}
@@ -79,5 +86,7 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
              | NUMBER:n	                    {: RESULT = Double.valueOf(n);       				:}
              | DOUBLENUMBER:n	            {: RESULT = n;       								:}
              | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
+             | EXPONENTIAL expr:e1 RPAREN   {: RESULT = Math.exp(e1);        					:}         
+             | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}         
              ;
        

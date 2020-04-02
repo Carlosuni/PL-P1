@@ -24,8 +24,10 @@ public interface sym {
   public static final int COMMENT = 10;
   public static final int MINUS = 4;
   public static final int error = 1;
+  public static final int EXPONENTIAL = 18;
   public static final int DIVIDEDBY = 6;
   public static final int DOUBLENUMBER = 11;
+  public static final int LOGARITHM = 19;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -44,7 +46,9 @@ public interface sym {
   "EMAIL",
   "DNI",
   "MATRICULA",
-  "FECHA"
+  "FECHA",
+  "EXPONENTIAL",
+  "LOGARITHM"
   };
 }
 
