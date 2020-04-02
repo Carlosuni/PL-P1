@@ -17,7 +17,6 @@ public interface sym {
   public static final int error = 1;
   public static final int RPAREN = 8;
   public static final int TIMES = 6;
-  public static final int DOUBLENUMBER = 11;
   public static final int COMMENT = 10;
   public static final int LPAREN = 7;
   public static final String[] terminalNames = new String[] {
@@ -31,8 +30,7 @@ public interface sym {
   "LPAREN",
   "RPAREN",
   "NUMBER",
-  "COMMENT",
-  "DOUBLENUMBER"
+  "COMMENT"
   };
 }
 

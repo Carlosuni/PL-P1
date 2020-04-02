@@ -33,12 +33,15 @@ scan with {: return lexer.next_token(); :};
 /* Terminals (tokens returned by the scanner). */
 terminal            SEMI, PLUS, MINUS, UMINUS, TIMES, LPAREN, RPAREN;
 terminal Integer    NUMBER;        // our scanner provides numbers as integers
-terminal String    COMMENT;
+terminal String    COMMENT;        // our scanner provides numbers as integers
+terminal Double    DOUBLENUMBER;        // our scanner provides numbers as integers
 
 
 /* Non terminals */
 non terminal            expr_list;
-non terminal Integer    expr;      // used to store evaluated subexpressions
+non terminal Double    expr;      // used to store evaluated subexpressions
+non terminal Integer    number_expr;      // used to store evaluated subexpressions
+non terminal Double    double_number_expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -57,7 +60,14 @@ expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1+e2;        :}
              | expr:e1 TIMES expr:e2        {: RESULT = e1*e2;        :}
              | MINUS expr:e                 {: RESULT = -e;           :}
              %prec UMINUS
-             | LPAREN expr:e RPAREN	         {: RESULT = e;           :}
-             | NUMBER:n	                     {: RESULT = n;           :}
+             | LPAREN expr:e RPAREN	        {: RESULT = e;            :}
+             | number_expr:n	            {: RESULT = Double.parseDouble(n); :}
+             | double_number_expr:n	        {: RESULT = n;            :}
              ;
+             
+number_expr ::= NUMBER:n	                {: RESULT = n;            :}
+
+double_number_expr := DOUBLENUMBER:n	    {: RESULT = n;            :}
+
+
        

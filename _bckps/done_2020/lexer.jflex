@@ -58,17 +58,26 @@ Newline    = \r | \n | \r\n
 Whitespace = [ \t\f] | {Newline}
 Number     = [0-9]+
 
+
 /* comments */
-Comment = {TraditionalComment} | {EndOfLineComment} | {ModernComment}
 TraditionalComment = "/*" {CommentContent} \*+ "/"
 EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
+/* Custom Tokens */
+/* Exercise A */
+Comment = {TraditionalComment} | {EndOfLineComment} | {ModernComment}
 ModernComment = "<!--"(.|{Newline})*"-->"		// Option 2 (Last year)
 
+/* Exercise B */
+//RealNumber = {Number}.{Number}
+//ScienceNumber = {RealNumber}[eE][\+\-]?{Number}
+//DoubleNumber = {RealNumber}|{ScienceNumber}
+
 RealNumber = {Number}"."{Number}
-ScienceNumber = ({Number} | {RealNumber}) ("e"|"E")("-"|"+") {Number}
+ScienceNumber = ({Number} | {RealNumber}) ("e"| "e-" | "e+") {Number}
 DoubleNumber = {RealNumber}|{ScienceNumber}
+
 
 
 
@@ -86,16 +95,17 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 <YYINITIAL> {
 
   {Whitespace} {                              }
-  ";"          { return symbolFactory.newSymbol("SEMI", SEMI); }
-  "+"          { return symbolFactory.newSymbol("PLUS", PLUS); }
-  "-"          { return symbolFactory.newSymbol("MINUS", MINUS); }
-  "*"          { return symbolFactory.newSymbol("TIMES", TIMES); }
-  "n"          { return symbolFactory.newSymbol("UMINUS", UMINUS); }
-  "("          { return symbolFactory.newSymbol("LPAREN", LPAREN); }
-  ")"          { return symbolFactory.newSymbol("RPAREN", RPAREN); }
-  {Number}     { return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
+  ";"          		{ return symbolFactory.newSymbol("SEMI", SEMI); }
+  "+"          		{ return symbolFactory.newSymbol("PLUS", PLUS); }
+  "-"          		{ return symbolFactory.newSymbol("MINUS", MINUS); }
+  "*"          		{ return symbolFactory.newSymbol("TIMES", TIMES); }
+  "n"          		{ return symbolFactory.newSymbol("UMINUS", UMINUS); }
+  "("          		{ return symbolFactory.newSymbol("LPAREN", LPAREN); }
+  ")"          		{ return symbolFactory.newSymbol("RPAREN", RPAREN); }
+  {Number}     		{ return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
   {Comment}			{ return symbolFactory.newSymbol("COMMENT", COMMENT); }
-  {DoubleNumber}	{ return symbolFactory.newSymbol("COMMENT", COMMENT, Double.parseDouble(yytext()); }
+  {DoubleNumber}	{ return symbolFactory.newSymbol("DOUBLENUMBER", DOUBLENUMBER, Double.parseDouble(yytext())); }
+  
 }
 
 
