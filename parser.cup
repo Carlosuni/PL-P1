@@ -57,10 +57,8 @@ non terminal Double    expr;      // used to store evaluated subexpressions
 
 /* Precedences */
 precedence left PLUS, MINUS;
-precedence left DIVIDEDBY;
-precedence left TIMES;
-precedence left LOGARITHM;
-precedence left EXPONENTIAL;
+precedence left DIVIDEDBY, TIMES;
+precedence left LOGARITHM, EXPONENTIAL;
 
 /* The grammar rules */
 statement_list ::= statement_list statement {:  :}
