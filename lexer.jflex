@@ -6,7 +6,7 @@ import java.lang.*;
 import java.io.InputStreamReader;
 
 /* Custom Imports */
-import java.text.SimpleDateFormat;  
+
 
 %%
 
@@ -112,7 +112,7 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   "+"          		{ return symbolFactory.newSymbol("PLUS", PLUS); }
   "-"          		{ return symbolFactory.newSymbol("MINUS", MINUS); }
   "*"          		{ return symbolFactory.newSymbol("TIMES", TIMES); }
-  "n"          		{ return symbolFactory.newSymbol("UMINUS", UMINUS); }
+  "/"          		{ return symbolFactory.newSymbol("DIVIDEDBY", DIVIDEDBY); }
   "("          		{ return symbolFactory.newSymbol("LPAREN", LPAREN); }
   ")"          		{ return symbolFactory.newSymbol("RPAREN", RPAREN); }
   {Number}     		{ return symbolFactory.newSymbol("NUMBER", NUMBER, Integer.parseInt(yytext())); }
