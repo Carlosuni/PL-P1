@@ -54,14 +54,12 @@ terminal String		LOGARITHM;
 non terminal            statement_list;
 non terminal            statement;
 non terminal Double    expr;      // used to store evaluated subexpressions
+non terminal Double    term;      // used to store evaluated subexpressions
+non terminal Double    factor;      // used to store evaluated subexpressions
 
-/* Precedences */
-precedence left PLUS, MINUS;
-precedence left DIVIDEDBY, TIMES;
-precedence left LOGARITHM, EXPONENTIAL;
 
 /* The grammar rules */
-statement_list ::= statement_list statement {:  :}
+statement_list ::= statement_list statement 	{:  :}
            		 | statement                   	{:  :}
             	 ;
             
@@ -73,17 +71,24 @@ statement ::= expr:e SEMI        			{: System.out.println(e); 							:}
             | MATRICULA:e					{: System.out.println("Matrícula: " + e); 			:}
             | FECHA:e						{: System.out.println("Fecha: " + e); 				:}
 			;     
-			       
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
-            | expr:e1 MINUS expr:e2         {: RESULT = e1 - e2;        						:}
-            | expr:e1 TIMES expr:e2         {: RESULT = e1 * e2;        						:}
-            | expr:e1 DIVIDEDBY expr:e2     {: RESULT = e1 / e2;        						:}
-            | MINUS expr:e                  {: RESULT = -e;           							:}
-            | LPAREN expr:e RPAREN	        {: RESULT = e;           							:}
-            | NUMBER:n	                    {: RESULT = Double.valueOf(n);       				:}
+			  
+factor    ::= NUMBER:n	               		{: RESULT = Double.valueOf(n);       				:}
             | DOUBLENUMBER:n	            {: RESULT = n;       								:}
             | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
+			| LPAREN expr:e RPAREN	        {: RESULT = e;           							:}
+            | MINUS expr:e                  {: RESULT = -e;           							:}           
+            | PLUS expr:e                   {: RESULT = -e;           							:}           
             | EXPONENTIAL expr:e1 RPAREN    {: RESULT = Math.exp(e1);        					:}         
-            | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}         
-            ;
+            | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}                  			
+			;
+
+term      ::= expr:e1 TIMES expr:e2         {: RESULT = e1 * e2;        						:}
+            | expr:e1 DIVIDEDBY expr:e2     {: RESULT = e1 / e2;        						:}
+            | factor:e					    {: RESULT = e;        								:}
+			;            
+         
+expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
+            | expr:e1 MINUS expr:e2         {: RESULT = e1 - e2;        						:}
+			| term:e					    {: RESULT = e;        								:}	
+			;
        
