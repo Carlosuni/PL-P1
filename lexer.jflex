@@ -68,7 +68,7 @@ EndOfLineComment = "//" [^\r\n]* {Newline}
 CommentContent = ( [^*] | \*+[^*/] )*
 
 /* Parte 1. Ejercicio A */
-ModernComment = "<!--" ( . | {Newline} )* "-->"		// Option 2 (Last year)
+ModernComment = "<!--" ( . | {Newline} )* "-->"
 
 /* Parte 1. Ejercicio B */
 RealNumber = {Number} "." {Number}
@@ -83,7 +83,7 @@ WhitespaceNewline = [ \t\f] | {Newline}
 NombrePalabra = [A-ZÑÁÉÍÓÚ] [a-zñáéíóú]*
 NombreApellidos = ( {NombrePalabra} {Whitespace}* )+
 Email = .+ "@" .+ "." .+
-Dni = [0-9]{7,8} "-" [A-Z] | [0-9]{7,8} [A-Z]
+Dni = [0-9]?[0-9]{7} "-" [A-Z] | [0-9]{7,8} [A-Z]
 MatriculaRetro = [A-Z]{1,2} "-" [0-9]{5} | [A-Z]{1,2} [0-9]{5}
 MatriculaAntigua = [A-Z]{1,2} "-" [0-9]{4} "-" [A-Z]{1,2} | [A-Z]{1,2} [0-9]{4} [A-Z]{1,2}
 MatriculaNueva = [0-9]{4} "-" [A-Z]{1,3} | [0-9]{4} [A-Z]{1,3}
