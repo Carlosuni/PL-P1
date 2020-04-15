@@ -76,19 +76,19 @@ factor    ::= NUMBER:n	               		{: RESULT = Double.valueOf(n);       			
             | DOUBLENUMBER:n	            {: RESULT = n;       								:}
             | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
 			| LPAREN expr:e RPAREN	        {: RESULT = e;           							:}
-            | MINUS expr:e                  {: RESULT = -e;           							:}           
-            | PLUS expr:e                   {: RESULT = -e;           							:}           
             | EXPONENTIAL expr:e1 RPAREN    {: RESULT = Math.exp(e1);        					:}         
             | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}                  			
+            | MINUS factor:e                  {: RESULT = -e;           							:}           
+            | PLUS factor:e                   {: RESULT = e;           							:}           		
 			;
-
-term      ::= expr:e1 TIMES expr:e2         {: RESULT = e1 * e2;        						:}
-            | expr:e1 DIVIDEDBY expr:e2     {: RESULT = e1 / e2;        						:}
+ 
+term      ::= term:e1 TIMES factor:e2         {: RESULT = e1 * e2;        						:}
+            | term:e1 DIVIDEDBY factor:e2     {: RESULT = e1 / e2;        						:}
             | factor:e					    {: RESULT = e;        								:}
 			;            
          
-expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
-            | expr:e1 MINUS expr:e2         {: RESULT = e1 - e2;        						:}
+expr      ::= expr:e1 PLUS  term:e2         {: RESULT = e1 + e2;        						:}
+            | expr:e1 MINUS term:e2         {: RESULT = e1 - e2;        						:}
 			| term:e					    {: RESULT = e;        								:}	
 			;
        

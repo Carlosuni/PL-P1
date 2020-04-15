@@ -80,7 +80,7 @@ HexNumber = "0x" {HexAlfaNumber} | "0X" {HexAlfaNumber}
 /* Parte 1. Ejercicio C */
 Whitespace = [ \t\f]
 WhitespaceNewline = [ \t\f] | {Newline}
-NombrePalabra = [A-ZÑÁÉÍÓÚ] [a-zñáéíóú]*
+NombrePalabra = [A-ZÑÁÉÍÓÚ] [a-zñáéíóú]+
 NombreApellidos = ( {NombrePalabra} {Whitespace}* )+
 Email = .+ "@" .+ "." .+
 Dni = [0-9]?[0-9]{7} "-" [A-Z] | [0-9]{7,8} [A-Z]
@@ -93,6 +93,7 @@ Fecha = [0-3]? [0-9] "/" [0-1]? [0-9] "/" [0-9]{4}
 /* Parte 2. Ejercicio A */
 Exponential = "exp("
 Logarithm = "log("
+
 
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
