@@ -17,6 +17,11 @@ import java.lang.Math;
 
 parser code {:
   protected Lexer lexer;
+/* Parte 2. Ejercicio C */			
+  /*parser code {:
+static TablaSimbolos tabla = new TablaSimbolos();
+public static void main(String[] arg){
+parser parserObj = new parser();*/
 :}
 
 /* define how to connect to the scanner! */
@@ -48,7 +53,8 @@ terminal String		MATRICULA;
 terminal String 	FECHA;
 terminal String		EXPONENTIAL;
 terminal String		LOGARITHM;
-
+terminal String		VARIABLE;
+terminal String		ASSIGN;
 
 /* Non terminals */
 non terminal            statement_list;
@@ -65,6 +71,7 @@ statement_list ::= statement_list statement 	{:  :}
             
 statement ::= expr:e SEMI        			{: System.out.println(e); 							:}
             | COMMENT	                    {:  												:}
+            | VARIABLE:e1 ASSIGN expr:e2 SEMI {: System.out.println("Variable: " + e1 + " = " + e2); 				:}
             | NOMBREAPELLIDOS:e				{: System.out.println("Nombre y apellidos: " + e); 	:}
             | EMAIL:e						{: System.out.println("e-mail: " + e); 				:}
             | DNI:e							{: System.out.println("DNI: " + e); 				:}
@@ -91,4 +98,16 @@ expr      ::= expr:e1 PLUS  term:e2         {: RESULT = e1 + e2;        						:}
             | expr:e1 MINUS term:e2         {: RESULT = e1 - e2;        						:}
 			| term:e					    {: RESULT = e;        								:}	
 			;
+
+/* Parte 2. Ejercicio C */			
+/*asig
+::= ID:s ASIG expr:e {:
+RESULT = e;
+s.valor = e;
+:}
+|
+ID:s ASIG asig:e {:
+RESULT = e;
+s.valor = e;
+:}*/			
        

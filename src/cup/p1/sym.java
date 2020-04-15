@@ -14,6 +14,7 @@ public interface sym {
   public static final int RPAREN = 8;
   public static final int SEMI = 2;
   public static final int EMAIL = 14;
+  public static final int VARIABLE = 20;
   public static final int LPAREN = 7;
   public static final int NOMBREAPELLIDOS = 13;
   public static final int MATRICULA = 16;
@@ -24,6 +25,7 @@ public interface sym {
   public static final int COMMENT = 10;
   public static final int MINUS = 4;
   public static final int error = 1;
+  public static final int ASSIGN = 21;
   public static final int EXPONENTIAL = 18;
   public static final int DIVIDEDBY = 6;
   public static final int DOUBLENUMBER = 11;
@@ -48,7 +50,9 @@ public interface sym {
   "MATRICULA",
   "FECHA",
   "EXPONENTIAL",
-  "LOGARITHM"
+  "LOGARITHM",
+  "VARIABLE",
+  "ASSIGN"
   };
 }
 
