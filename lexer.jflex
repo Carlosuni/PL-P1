@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 
 /* Custom Imports */
 
-
 %%
 
 %class Lexer
@@ -19,7 +18,12 @@ import java.io.InputStreamReader;
 %cup
 %char
 %{
-	
+	/* Parte 2. Ejercicio C */
+	private TablaSimbolos tabla;
+	public Yylex(Reader in, TablaSimbolos t){
+		this(in);
+		this.tabla = t;
+	}
 
     public Lexer(ComplexSymbolFactory sf, java.io.InputStream is){
 		this(is);
@@ -94,6 +98,10 @@ Fecha = [0-3]? [0-9] "/" [0-1]? [0-9] "/" [0-9]{4}
 Exponential = "exp("
 Logarithm = "log("
 
+/* Parte 2. Ejercicio C */
+Variable = "MEM" {Number}
+Assign = {Whitespace}* "=" {Whitespace}*
+
 ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 
 
@@ -126,6 +134,12 @@ ident = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
   {Fecha}			{ return symbolFactory.newSymbol("FECHA", FECHA, yytext()); }
   {Exponential}		{ return symbolFactory.newSymbol("EXPONENTIAL", EXPONENTIAL, yytext()); }
   {Logarithm}		{ return symbolFactory.newSymbol("LOGARITHM", LOGARITHM, yytext()); }
+  {Assign}			{ return symbolFactory.newSymbol("ASSIGN", ASSIGN, yytext()); }
+  {Variable}		{ Simbolo s;
+					  if ((s = tabla.buscar(yytext())) == null)
+						  s = tabla.insertar(yytext());
+					  return new Symbol(sym.VARIABLE, s);
+					}
 }
 
 

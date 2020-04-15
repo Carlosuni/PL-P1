@@ -17,6 +17,22 @@ import java.lang.Math;
 
 parser code {:
   protected Lexer lexer;
+  
+  /* Parte 2. Ejercicio C */
+  static TablaSimbolos tabla = new TablaSimbolos();
+  public static void main(String[] arg){
+    parser parserObj = new parser();
+    Yylex miAnalizadorLexico =
+      new Yylex(new InputStreamReader(System.in), tabla);
+    parserObj.setScanner(miAnalizadorLexico);
+    try{
+      parserObj.parse();
+      tabla.imprimir();
+    }catch(Exception x){
+      x.printStackTrace();
+      System.out.println("Error fatal.\n");
+    }
+  }
 :}
 
 /* define how to connect to the scanner! */
@@ -49,6 +65,10 @@ terminal String 	FECHA;
 terminal String		EXPONENTIAL;
 terminal String		LOGARITHM;
 
+/* Parte 2. Ejercicio C */
+terminal Simbolo 	VARIABLE;
+terminal 			ASSIGN;
+
 
 /* Non terminals */
 non terminal            statement_list;
@@ -57,6 +77,8 @@ non terminal Double    expr;      // used to store evaluated subexpressions
 non terminal Double    term;      // used to store evaluated subexpressions
 non terminal Double    factor;      // used to store evaluated subexpressions
 
+/* Parte 2. Ejercicio C */
+non terminal Double assign;
 
 /* The grammar rules */
 statement_list ::= statement_list statement 	{:  :}
@@ -64,14 +86,16 @@ statement_list ::= statement_list statement 	{:  :}
             	 ;
             
 statement ::= expr:e SEMI        			{: System.out.println(e); 							:}
+            | assign SEMI                   {: System.out.println("Asignacion efectuada.");:}
             | COMMENT	                    {:  												:}
             | NOMBREAPELLIDOS:e				{: System.out.println("Nombre y apellidos: " + e); 	:}
             | EMAIL:e						{: System.out.println("e-mail: " + e); 				:}
             | DNI:e							{: System.out.println("DNI: " + e); 				:}
             | MATRICULA:e					{: System.out.println("Matrícula: " + e); 			:}
             | FECHA:e						{: System.out.println("Fecha: " + e); 				:}
-			;     
+			;   
 			  
+/* Parte 2. Ejercicio B: Refactorización para eliminación de Precedence */			  
 factor    ::= NUMBER:n	               		{: RESULT = Double.valueOf(n);       				:}
             | DOUBLENUMBER:n	            {: RESULT = n;       								:}
             | HEXNUMBER:n	                {: RESULT = Double.valueOf(n);       				:}     
@@ -80,13 +104,20 @@ factor    ::= NUMBER:n	               		{: RESULT = Double.valueOf(n);       			
             | PLUS expr:e                   {: RESULT = -e;           							:}           
             | EXPONENTIAL expr:e1 RPAREN    {: RESULT = Math.exp(e1);        					:}         
             | LOGARITHM expr:e1 RPAREN   	{: RESULT = Math.log(e1);        					:}                  			
+            | VARIABLE:s					{: RESULT = s.valor; 								:}                  			
 			;
 
 term      ::= expr:e1 TIMES expr:e2         {: RESULT = e1 * e2;        						:}
             | expr:e1 DIVIDEDBY expr:e2     {: RESULT = e1 / e2;        						:}
             | factor:e					    {: RESULT = e;        								:}
 			;            
-         
+
+assign 	  ::= VARIABLE:s ASSIGN expr:e { :RESULT = e;
+										 s.valor = e;													:}
+			|VARIABLE:s ASSIGN asig:e {: RESULT = e;
+										 s.valor = e;													:}
+			;
+        
 expr      ::= expr:e1 PLUS  expr:e2         {: RESULT = e1 + e2;        						:}
             | expr:e1 MINUS expr:e2         {: RESULT = e1 - e2;        						:}
 			| term:e					    {: RESULT = e;        								:}	
